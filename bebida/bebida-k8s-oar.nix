@@ -1,12 +1,13 @@
 { pkgs, modulesPath, nur, helpers, ... }: {
   roles =
     let
-      commonConfig = import ./common_config.nix { inherit pkgs modulesPath nur; };
+      commonConfig = import ./common_config.nix { inherit pkgs modulesPath; };
+      oarConfig = import ./oar_config.nix { inherit pkgs nur; };
       tokenFile = pkgs.writeText "token" "p@s$w0rd";
     in
     {
       frontend = { ... }: {
-        imports = [ commonConfig ];
+        imports = [ commonConfig oarConfig ];
         nxc.sharedDirs."/users".server = "server";
 
         services.oar.client.enable = true;
@@ -15,7 +16,7 @@
         services.oar.web.monika.enable = true;
       };
       server = { ... }: {
-        imports = [ commonConfig ];
+        imports = [ commonConfig oarConfig ];
         nxc.sharedDirs."/users".export = true;
 
         services.oar.server.enable = true;
@@ -26,10 +27,10 @@
 
         system.activationScripts.k3s-config = ''
           SERVER=$( grep server /etc/nxc/deployment-hosts | ${pkgs.gawk}/bin/awk '{ print $1 }')
-          echo 'bind-address: "'$SERVER'"' > /etc/k3s.yaml  
+          echo 'bind-address: "'$SERVER'"' > /etc/k3s.yaml
           echo 'node-external-ip: "'$SERVER'"' >> /etc/k3s.yaml
         '';
-        
+
         services.k3s = {
           inherit tokenFile;
           enable = true;
@@ -39,7 +40,7 @@
       };
 
       node = { ... }: {
-        imports = [ commonConfig ];
+        imports = [ commonConfig oarConfig ];
         nxc.sharedDirs."/users".server = "server";
 
         services.oar.node.enable = true;
