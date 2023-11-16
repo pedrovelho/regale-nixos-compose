@@ -57,10 +57,30 @@ in {
     DB_BASE_PASSWD_RO="oar_ro"
   '';
 
+  # environment.etc."oar-quotas-buggy.json" = {
+  #   text = ''
+  #     {
+  #       "periodical": [
+  #           ["* * * *", "quotas_default", "osef lol"]
+  #       ],
+  #       "oneshot": [
+  #       ],
+  #       "quotas_default": {
+  #         "*,*,*,*": [-1, -1, -1]
+  #       },
+  #       "time-critical": {
+  #         "*,*,*,*": [-1, -1, -1]
+  #       }
+  #     }
+  #   '';
+  #   mode = "0777";
+  # };
+
   environment.etc."oar-quotas.json" = {
     text = ''
       {
         "quotas": {
+          "*,*,*,*": [-1, -1, -1]
         }
       }
     '';
