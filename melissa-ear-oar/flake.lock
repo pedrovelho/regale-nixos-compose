@@ -2,11 +2,11 @@
   "nodes": {
     "NUR": {
       "locked": {
-        "lastModified": 1687497781,
-        "narHash": "sha256-iySsVFg90kwpIs5E4u71cEVkZZRPRsqYvDmZjPtbgvc=",
+        "lastModified": 1693565297,
+        "narHash": "sha256-vsLSVlmvKWAROf/GVnH1BGeKqR2U2YyqvF7dnMpaj+M=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "299f27861e05df6637aa586ab8eaf7c8f33db863",
+        "rev": "89f429014bf6d1df56df530a780909ac7cad1c95",
         "type": "github"
       },
       "original": {
@@ -16,12 +16,15 @@
       }
     },
     "flake-utils": {
+      "inputs": {
+        "systems": "systems"
+      },
       "locked": {
-        "lastModified": 1667395993,
-        "narHash": "sha256-nuEHfE/LcWyuSWnS8t12N1wc105Qtau+/OdUAjtQ0rA=",
+        "lastModified": 1692799911,
+        "narHash": "sha256-3eihraek4qL744EvQXsK1Ha6C3CR7nnT8X2qWap4RNk=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "5aed5285a952e0b949eb3ba02c12fa4fcfef535f",
+        "rev": "f9e7cf818399d17d347f847525c5a5a8032e4e44",
         "type": "github"
       },
       "original": {
@@ -69,16 +72,16 @@
         "nixpkgs2111": "nixpkgs2111"
       },
       "locked": {
-        "lastModified": 1687508885,
-        "narHash": "sha256-azWCb2UHGYOTgxvlWUDpeWDdZe0KhM2lTpMgZ78D3PI=",
+        "lastModified": 1693571306,
+        "narHash": "sha256-KMz63AX5pDtaYtFPmTy31zpJDrPH5mDnC1yDOZ9ysF4=",
         "owner": "oar-team",
         "repo": "nur-kapack",
-        "rev": "eac322b32fdca63fd8dc8509858dd6e1e4a184e5",
+        "rev": "99eef97540a9185227a53022a4acdaedf3617a06",
         "type": "github"
       },
       "original": {
         "owner": "oar-team",
-        "ref": "nixpkgs-2305",
+        "ref": "regale",
         "repo": "nur-kapack",
         "type": "github"
       }
@@ -163,11 +166,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1687419777,
-        "narHash": "sha256-b1Z0fqyNYf+A1BCNy6zIt5kVhKnSeaih/TlW25HqxDI=",
+        "lastModified": 1687771858,
+        "narHash": "sha256-+zyTcniOPy+QiBErz/xQtHTDp5X9m8yaC2lYfxqdKY8=",
         "ref": "2305",
-        "rev": "89582d207b4c96205ce54acbe024e518f71a528c",
-        "revCount": 536,
+        "rev": "36d807d044bc41992604613c12e0316321b4c176",
+        "revCount": 537,
         "type": "git",
         "url": "https://gitlab.inria.fr/nixos-compose/nixos-compose.git"
       },
@@ -177,12 +180,52 @@
         "url": "https://gitlab.inria.fr/nixos-compose/nixos-compose.git"
       }
     },
+<<<<<<< HEAD
+    "regale": {
+      "inputs": {
+        "NUR": "NUR_2",
+        "kapack": "kapack_3",
+        "nixpkgs": "nixpkgs_2"
+      },
+      "locked": {
+        "dir": "regale-library",
+        "lastModified": 1693488801,
+        "narHash": "sha256-Pg8lIuJHUXHiiSckKEpEab88AqCNkfUD+QpRHrLF2J8=",
+        "ref": "refs/heads/nixpkgs-2305",
+        "rev": "fa9461198ccbdcc142371d491649ce4d674a170c",
+        "revCount": 167,
+        "type": "git",
+        "url": "file:///home/adfaure/code/regale-nixos-compose?dir=regale-library"
+      },
+      "original": {
+        "dir": "regale-library",
+        "type": "git",
+        "url": "file:///home/adfaure/code/regale-nixos-compose?dir=regale-library"
+      }
+    },
+=======
+>>>>>>> parent of d809cb7 (Merge branch 'regale-lib' into nixpkgs-2305)
     "root": {
       "inputs": {
         "NUR": "NUR",
         "kapack": "kapack",
         "nixpkgs": "nixpkgs",
         "nxc": "nxc"
+      }
+    },
+    "systems": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
       }
     }
   },
