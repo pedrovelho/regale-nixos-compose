@@ -1,5 +1,5 @@
 {
-  description = "Bebida-K8s-OAR";
+  description = "Bebida testbed with K8s and OAR or Slurm";
 
   inputs = {
     #nixpkgs.url = "github:NixOS/nixpkgs/22.05";
@@ -20,10 +20,9 @@
         inherit nixpkgs system NUR;
         repoOverrides = { inherit kapack; };
         setup = ./setup.toml;
-        composition = ./composition.nix;
+        compositions = ./compositions.nix;
       };
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
       devShell.${system} = nxc.devShells.${system}.nxcShell;
     };
 }
-     
