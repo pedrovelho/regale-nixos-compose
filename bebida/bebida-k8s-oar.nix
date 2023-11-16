@@ -1,8 +1,8 @@
-{ pkgs, modulesPath, nur, helpers, ... }: {
+{ pkgs, modulesPath, nur, helpers, flavour, ... }: {
   roles =
     let
       commonConfig = import ./common_config.nix { inherit pkgs modulesPath; };
-      oarConfig = import ./oar_config.nix { inherit pkgs nur; };
+      oarConfig = import ./oar_config.nix { inherit pkgs nur flavour modulesPath; };
       tokenFile = pkgs.writeText "token" "p@s$w0rd";
     in
     {

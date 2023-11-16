@@ -1,37 +1,41 @@
 { pkgs }:
 {
-  add_resources = pkgs.writers.writePython3Bin "add_resources"
-    {
-      libraries = [ pkgs.nur.repos.kapack.oar ];
+
+  add_resources =
+    pkgs.writers.writePython3Bin "add_resources" {
+      libraries = [pkgs.nur.repos.kapack.oar];
     } ''
-    from oar.lib.tools import get_date
-    from oar.lib.resource_handling import resources_creation
-    import sys
-    import time
-    r = True
-    while r:
-        try:
-            print(get_date())  # date took from db (test connection)
-            r = False
-        except Exception:
-            print("DB is not ready")
-            time.sleep(0.25)
-    resources_creation("node", int(sys.argv[1]), int(sys.argv[2]))
-  '';
+      from oar.lib.resource_handling import resources_creation
+      from oar.lib.globals import init_and_get_session
+      import sys
 
-  oar_db_postInitCommands = ''
-    num_cores=$(( $(lscpu | awk '/^Socket\(s\)/{ print $2 }') * $(lscpu | awk '/^Core\(s\) per socket/{ print $4 }') ))
-    echo $num_cores > /etc/num_cores
+      session = init_and_get_session()
 
-    if [[ -f /etc/nxc/deployment-hosts ]]; then
-      num_nodes=$(grep node /etc/nxc/deployment-hosts | wc -l)
-    else
-      num_nodes=$(jq -r '[.nodes[] | select(contains("node"))]| length' /etc/nxc/deployment.json)
-    fi
-    echo $num_nodes > /etc/num_nodes
+      resources_creation(session, "node", int(sys.argv[1]), int(sys.argv[2]))
+    '';
 
-    add_resources $num_nodes $num_cores
-  '';
+  wait_db =
+    pkgs.writers.writePython3Bin "wait_db" {
+      libraries = [pkgs.nur.repos.kapack.oar];
+    } ''
+      from oar.lib.tools import get_date
+      from oar.lib.globals import init_and_get_session
+      import time
+      r = True
+      n_try = 10000
+
+
+      session = None
+      while n_try > 0 and r:
+          n_try = n_try - 1
+          try:
+              session = init_and_get_session()
+              print(get_date(session))  # date took from db (test connection)
+              r = False
+          except Exception:
+              print("DB is not ready")
+              time.sleep(0.25)
+    '';
 
   bebida_prolog = pkgs.writeShellScript "bebida_prolog"
     ''

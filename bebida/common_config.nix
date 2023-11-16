@@ -9,7 +9,6 @@ in
     pkgs.vim
     pkgs.cpufrequtils
     pkgs.python3Packages.clustershell
-    pkgs.taktuk
     pkgs.htop
     pkgs.tree
   ];
