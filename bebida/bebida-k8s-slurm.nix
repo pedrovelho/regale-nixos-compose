@@ -32,12 +32,20 @@ in
           echo 'bind-address: "'$SERVER'"' > /etc/k3s.yaml
           echo 'node-external-ip: "'$SERVER'"' >> /etc/k3s.yaml
         '';
+        # Get a valid kubeconfig for Bebida Slurm prolg/epilog"
+        system.activationScripts.bebida-config = ''
+            mkdir -p -m777 /etc/bebida/log
+        '';
 
         services.k3s = {
           inherit tokenFile;
           enable = true;
           role = "server";
           configPath = "/etc/k3s.yaml";
+          environmentFile = pkgs.writeText "k3s-export" ''
+            K3S_KUBECONFIG_OUTPUT=/etc/bebida/kubeconfig.yaml
+            K3S_KUBECONFIG_MODE=666
+          '';
         };
       };
 

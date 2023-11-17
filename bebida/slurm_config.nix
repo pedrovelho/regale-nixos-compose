@@ -7,16 +7,26 @@ in
     controlMachine = "server";
     nodeName = [ "node[1-${nbNodes}] CPUs=1 State=UNKNOWN" ];
     partitionName = [
-      "default Nodes=computeNode[1-${nbNodes}] Default=YES MaxTime=INFINITE State=UP"
+      "DEFAULT Nodes=node[1-${nbNodes}] Default=YES State=UP DefaultTime=60"
+      "bebida Nodes=node[1-${nbNodes}] Default=YES MaxTime=INFINITE"
     ];
-    #extraConfig = ''
-    #  AccountingStorageHost=dbd
-    #  AccountingStorageType=accounting_storage/slurmdbd
-    #  MpiDefault=pmix
-    #'';
+    extraConfig = ''
+      # BEBIDA
+      PrologSlurmctld=/etc/bebida/master-prolog.sh
+      EpilogSlurmctld=/etc/bebida/master-epilog.sh
+      PrologFlags=Alloc
+    '';
   };
+  environment.etc."bebida/master-prolog.sh".source = ./scripts/master-prolog.sh;
+  environment.etc."bebida/master-epilog.sh".source = ./scripts/master-epilog.sh;
+
+  environment.systemPackages = [
+    # Required for the master prolog and epilog
+    pkgs.coreutils
+  ];
+
   # Avoid error about xauth missing...
-  services.openssh.forwardX11 = false;
+  services.openssh.settings.X11Forwarding = false;
   services.slurm.dbdserver = {
     dbdHost = "server";
     storagePassFile = "${passFile}";
@@ -40,7 +50,6 @@ in
       innodb_lock_wait_timeout = 900;
     };
   };
-
 
   systemd.services.slurmdbd.serviceConfig = {
     Restart = "on-failure";
