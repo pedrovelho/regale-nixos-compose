@@ -10,35 +10,25 @@
   dockerPorts.frontend = ["8443:443" "8000:80"];
 
   roles = let
-    commonConfig = import ../lib/oar_config.nix {inherit pkgs modulesPath nur flavour;};
-    melissa = {
-      pkgs,
-      modulesPath,
-      nur,
-      ...
-    }: {
-      environment.variables.MELISSA_SRC = "${pkgs.nur.repos.kapack.melissa-launcher.src}";
-      environment.systemPackages = [
-        pkgs.nur.repos.kapack.melissa-heat-pde
-        pkgs.nur.repos.kapack.melissa-launcher
-      ];
-    };
+    oarConfig = import ../lib/oar_config.nix {inherit pkgs modulesPath nur flavour;};
+    commonConfig = import ../lib/common.nix {inherit pkgs modulesPath nur flavour;};
+    melissa = import ../lib/melissa.nix {};
   in {
     frontend = {...}: {
-      imports = [commonConfig melissa];
+      imports = [commonConfig oarConfig melissa];
       nxc.sharedDirs."/users".server = "server";
 
       services.oar.client.enable = true;
     };
     server = {...}: {
-      imports = [commonConfig melissa];
+      imports = [commonConfig oarConfig melissa];
       nxc.sharedDirs."/users".export = true;
 
       services.oar.server.enable = true;
       services.oar.dbserver.enable = true;
     };
     node = {...}: {
-      imports = [commonConfig melissa];
+      imports = [commonConfig oarConfig melissa];
       nxc.sharedDirs."/users".server = "server";
 
       services.oar.node.enable = true;

@@ -8,28 +8,28 @@
 }: {
   roles = let
     dockerPorts.frontend = ["8443:443" "8000:80"];
-    commonConfig = import ../lib/oar_config.nix {inherit pkgs modulesPath nur flavour;};
-  in
-    {
-      node = {...}: {
-        imports = [commonConfig];
-        services.oar.node = {enable = true;};
-      };
-      frontend = {...}: {
-        imports = [commonConfig];
-
-        services.oar.client.enable = true;
-        services.oar.web.enable = true;
-        services.oar.web.drawgantt.enable = true;
-      };
-      server = {...}: {
-        imports = [commonConfig];
-
-        services.oar.server.enable = true;
-        services.oar.dbserver.enable = true;
-      };
+    oarConfig = import ../lib/oar_config.nix {inherit pkgs modulesPath nur flavour;};
+    commonConfig = import ../lib/common.nix {inherit pkgs modulesPath nur flavour;};
+  in {
+    node = {...}: {
+      imports = [commonConfig oarConfig];
+      services.oar.node = {enable = true;};
     };
-    rolesDistribution = { node = 3; };
+    frontend = {...}: {
+      imports = [commonConfig oarConfig];
+
+      services.oar.client.enable = true;
+      services.oar.web.enable = true;
+      services.oar.web.drawgantt.enable = true;
+    };
+    server = {...}: {
+      imports = [commonConfig oarConfig];
+
+      services.oar.server.enable = true;
+      services.oar.dbserver.enable = true;
+    };
+  };
+  rolesDistribution = {node = 3;};
 
   testScript = ''
     frontend.succeed("true")

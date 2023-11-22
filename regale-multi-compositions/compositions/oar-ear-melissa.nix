@@ -8,27 +8,13 @@
   ...
 }: {
   nodes = let
-    commonConfig = import ../lib/oar_config.nix {inherit pkgs modulesPath nur flavour;};
     earConfig = import ../lib/ear_config.nix {inherit pkgs modulesPath nur setup;};
-    melissa = {
-      pkgs,
-      modulesPath,
-      nur,
-      ...
-    }: {
-      environment.variables.MELISSA_SRC = "${pkgs.nur.repos.kapack.melissa-launcher.src}";
-      environment.systemPackages = [
-        pkgs.nur.repos.kapack.melissa-heat-pde
-        pkgs.nur.repos.kapack.melissa-launcher
-      ];
-      security.pam.loginLimits = [
-        { domain = "*"; item = "memlock"; type = "-"; value = "unlimited"; }
-        { domain = "*"; item = "stack"; type = "-"; value = "unlimited"; }
-      ]; 
-    };
+    oarConfig = import ../lib/oar_config.nix {inherit pkgs modulesPath nur flavour;};
+    commonConfig = import ../lib/common.nix {inherit pkgs modulesPath nur flavour;};
+    melissa = import ../lib/melissa.nix {};
   in {
     frontend = {...}: {
-      imports = [commonConfig earConfig melissa];
+      imports = [commonConfig oarConfig earConfig melissa];
       nxc.sharedDirs."/users".server = "server";
 
       services.oar.client.enable = true;
@@ -37,7 +23,7 @@
       services.oar.web.monika.enable = true;
     };
     server = {...}: {
-      imports = [commonConfig earConfig melissa];
+      imports = [commonConfig oarConfig earConfig melissa];
       nxc.sharedDirs."/users".export = true;
 
       services.oar.server.enable = true;
@@ -45,14 +31,14 @@
       services.ear.database.enable = true;
     };
     eargm = {...}: {
-      imports = [commonConfig earConfig melissa];
+      imports = [commonConfig oarConfig earConfig melissa];
       nxc.sharedDirs."/users".server = "server";
 
       services.ear.global_manager.enable = true;
     };
 
     node = {...}: {
-      imports = [commonConfig earConfig melissa];
+      imports = [commonConfig oarConfig earConfig melissa];
       nxc.sharedDirs."/users".server = "server";
       systemd.enableUnifiedCgroupHierarchy = false;
       services.oar.node.enable = true;
@@ -61,7 +47,7 @@
     };
   };
 
-  rolesDistribution = {node =3;};
+  rolesDistribution = {node = 3;};
 
   testScript = ''
     # Submit job with script under user1
