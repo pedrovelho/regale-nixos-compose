@@ -25,7 +25,15 @@
       compositions = ./compositions.nix;
     };
 
-    devShell.${system} = nxc.devShells.${system}.nxcShell;
+    devShell.${system} = nxc.devShells.${system}.nxcShell.overrideAttrs (old: {
+      buildInputs =
+        old.buildInputs
+        ++ [
+          nixpkgs.legacyPackages.x86_64-linux.vde2
+          nixpkgs.legacyPackages.x86_64-linux.qemu_kvm
+        ];
+    });
+
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
   };
 }
