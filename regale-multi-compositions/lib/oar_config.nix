@@ -13,46 +13,12 @@
 in {
   imports = [nur.repos.kapack.modules.oar];
 
-  environment.variables.OMPI_ALLOW_RUN_AS_ROOT = "1";
-  environment.variables.OMPI_ALLOW_RUN_AS_ROOT_CONFIRM = "1";
-
-  environment.systemPackages = [
-    pkgs.python3 pkgs.nano pkgs.vim
-    pkgs.nur.repos.kapack.oar 
-    pkgs.jq
-
-    pkgs.nano
-    pkgs.mariadb
-    pkgs.cpufrequtils
-
-    pkgs.nur.repos.kapack.npb
-    pkgs.nur.repos.kapack.openmpi
-    pkgs.nur.repos.kapack.ucx
-    (pkgs.hpl.override { mpi = pkgs.nur.repos.kapack.openmpi; })
-
-    pkgs.taktuk
-
-    scripts.wait_db
-    scripts.add_resources
-  ];
+  environment.systemPackages = [];
 
   networking.firewall.enable = false;
 
   users.users.user1 = {isNormalUser = true;};
   users.users.user2 = {isNormalUser = true;};
-
-  # Service dedicated to the gros cluster at nancy
-  # that has nodes configured with two network interfaces.
-  # The stage 1 configures both interface with ip in the same network, 
-  # leading openmpi to not being able to start jobs.
-  systemd.services.shutdown-eno2np1 = {
-    after = [ "network.target" ];
-    wantedBy = [ "multi-user.target" "network-online.target" ];
-    serviceConfig.Type = "oneshot";
-    script = ''
-  	  ${pkgs.iproute2}/bin/ip link set dev eno2np1 down
-    '';
-  };
 
   systemd.services.oar-cgroup = {
     enable = flavour.name == "docker";

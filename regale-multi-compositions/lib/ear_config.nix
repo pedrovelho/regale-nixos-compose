@@ -1,10 +1,17 @@
-{ pkgs, modulesPath, nur, setup }:
-let
-  inherit (import "${toString modulesPath}/tests/ssh-keys.nix" pkgs)
-    snakeOilPrivateKey snakeOilPublicKey;
-  scripts = import ./scripts/scripts.nix { inherit pkgs; };
+{
+  pkgs,
+  modulesPath,
+  nur,
+  setup,
+}: let
+  inherit
+    (import "${toString modulesPath}/tests/ssh-keys.nix" pkgs)
+    snakeOilPrivateKey
+    snakeOilPublicKey
+    ;
+  scripts = import ./scripts/scripts.nix {inherit pkgs;};
 in {
-  imports = [ nur.repos.kapack.modules.ear  ];
+  imports = [nur.repos.kapack.modules.ear];
 
   systemd.enableUnifiedCgroupHierarchy = false;
 
@@ -16,7 +23,8 @@ in {
     pkgs.nur.repos.kapack.npb
     pkgs.nur.repos.kapack.ear
 
-    pkgs.openmpi pkgs.taktuk
+    pkgs.openmpi
+    pkgs.taktuk
 
     scripts.ear-mpirun
     scripts.ear_suspendAction
@@ -51,12 +59,12 @@ in {
     };
     extraConfig = {
       Island = "0 DBIP=node1 DBSECIP=node2 Nodes=node[1-${builtins.toString setup.params.nb_nodes}]";
-      EARGMPowerLimit= setup.params.nb_nodes * 180;
+      EARGMPowerLimit = setup.params.nb_nodes * 180;
 
       EARGMPowercapSuspendAction = "${scripts.ear_suspendAction}/bin/ear_suspendaction";
-      EARGMPowercapSuspendLimit=90;
+      EARGMPowercapSuspendLimit = 90;
       EARGMPowercapResumeAction = "${scripts.ear_resumeAction}/bin/ear_resumeaction";
-      EARGMPowercapResumeLimit=70;
+      EARGMPowercapResumeLimit = 70;
     };
   };
 }
