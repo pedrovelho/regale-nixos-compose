@@ -22,6 +22,8 @@
         services.oar.server.enable = true;
         services.oar.dbserver.enable = true;
 
+        services.bebida-shaker.enable = true;
+
         # K3s utils
         environment.systemPackages = with pkgs; [ gzip jq kubectl ];
 
@@ -36,6 +38,10 @@
           enable = true;
           role = "server";
           configPath = "/etc/k3s.yaml";
+          environmentFile = pkgs.writeText "k3s-export" ''
+            K3S_KUBECONFIG_OUTPUT=/etc/bebida/kubeconfig.yaml
+            K3S_KUBECONFIG_MODE=666
+          '';
         };
       };
 

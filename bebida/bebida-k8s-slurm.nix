@@ -24,6 +24,8 @@ in
         services.slurm.server.enable = true;
         services.slurm.dbdserver.enable = true;
 
+        services.bebida-shaker.enable = true;
+
         # K3s utils
         environment.systemPackages = with pkgs; [ gzip jq kubectl ];
 
@@ -34,7 +36,7 @@ in
         '';
         # Get a valid kubeconfig for Bebida Slurm prolg/epilog"
         system.activationScripts.bebida-config = ''
-            mkdir -p -m777 /etc/bebida/log
+          mkdir -p -m777 /etc/bebida/log
         '';
 
         services.k3s = {

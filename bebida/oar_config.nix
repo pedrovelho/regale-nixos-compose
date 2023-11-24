@@ -1,17 +1,19 @@
-{
-  pkgs,
-  modulesPath,
-  nur,
-  flavour,
-}: let
+{ pkgs
+, modulesPath
+, nur
+, flavour
+,
+}:
+let
   inherit
     (import "${toString modulesPath}/tests/ssh-keys.nix" pkgs)
     snakeOilPrivateKey
     snakeOilPublicKey
     ;
-  scripts = import scripts/scripts.nix {inherit pkgs;};
-in {
-  imports = [nur.repos.kapack.modules.oar];
+  scripts = import scripts/scripts.nix { inherit pkgs; };
+in
+{
+  imports = [ nur.repos.kapack.modules.oar ];
 
   environment.variables.OMPI_ALLOW_RUN_AS_ROOT = "1";
   environment.variables.OMPI_ALLOW_RUN_AS_ROOT_CONFIRM = "1";
@@ -30,8 +32,8 @@ in {
     AuthorizedKeysCommandUser nobody
   '';
 
-  environment.etc."oar/bebida_prolog.sh".source = scripts.bebida_prolog;
-  environment.etc."oar/bebida_epilog.sh".source = scripts.bebida_epilog;
+  environment.etc."oar/bebida_prolog.sh".source = ./scripts/master-prolog-oar.sh;
+  environment.etc."oar/bebida_epilog.sh".source = ./scripts/master-epilog-oar.sh;
 
   environment.etc."privkey.snakeoil" = {
     mode = "0600";
@@ -102,7 +104,7 @@ in {
     database = {
       host = "server";
       passwordFile = "/etc/oar-dbpassword";
-      initPath = [pkgs.util-linux pkgs.gawk pkgs.jq scripts.wait_db scripts.add_resources];
+      initPath = [ pkgs.util-linux pkgs.gawk pkgs.jq scripts.wait_db scripts.add_resources ];
       postInitCommands = ''
         num_cores=$(( $(lscpu | awk '/^Socket\(s\)/{ print $2 }') * $(lscpu | awk '/^Core\(s\) per socket/{ print $4 }') ))
         echo $num_cores > /etc/num_cores

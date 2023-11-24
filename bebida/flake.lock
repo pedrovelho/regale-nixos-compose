@@ -2,11 +2,11 @@
   "nodes": {
     "NUR": {
       "locked": {
-        "lastModified": 1700120697,
-        "narHash": "sha256-tHu33Zyvi7oUnm3LQaX5YkAMYHCmQ1P+B6HBMBvZ7iI=",
+        "lastModified": 1700578383,
+        "narHash": "sha256-ij/q6/GJc/z7hML30aAVHw+bTKSV+Qfx4iGLimrZ0lw=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "143e00473a3625bf9e49c53c477d75fdc5b62684",
+        "rev": "ddbb03620f56d5e27fdb494a712f3735a97da448",
         "type": "github"
       },
       "original": {
@@ -15,9 +15,46 @@
         "type": "github"
       }
     },
+    "bebidaOptimizer": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1700833745,
+        "narHash": "sha256-OgMaGTUAa1xNvnk4N+pYQskZgrd01UrPFk1CBqrzoEE=",
+        "owner": "RyaxTech",
+        "repo": "bebida-optimization-service",
+        "rev": "df6f31c69abd986f8193c7310d508da66b33440f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "RyaxTech",
+        "repo": "bebida-optimization-service",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
+      },
+      "locked": {
+        "lastModified": 1694529238,
+        "narHash": "sha256-zsNZZGTGnMOf9YpHKJqMSsa0dXbfmxeoJ7xHlrt+xmY=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "ff7b65b44d01cf9ba6a71320833626af21126384",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "flake-utils_2": {
+      "inputs": {
+        "systems": "systems_2"
       },
       "locked": {
         "lastModified": 1692799911,
@@ -33,7 +70,7 @@
         "type": "github"
       }
     },
-    "flake-utils_2": {
+    "flake-utils_3": {
       "locked": {
         "lastModified": 1656928814,
         "narHash": "sha256-RIFfgBuKz6Hp89yRr7+NR5tzIAbn52h8vT6vXkYjZoM=",
@@ -48,7 +85,7 @@
         "type": "github"
       }
     },
-    "flake-utils_3": {
+    "flake-utils_4": {
       "locked": {
         "lastModified": 1653893745,
         "narHash": "sha256-0jntwV3Z8//YwuOjzhV2sgJJPt+HY6KhU7VZUL0fKZQ=",
@@ -65,18 +102,18 @@
     },
     "kapack": {
       "inputs": {
-        "flake-utils": "flake-utils",
+        "flake-utils": "flake-utils_2",
         "nixpkgs": [
           "nixpkgs"
         ],
         "nixpkgs2111": "nixpkgs2111"
       },
       "locked": {
-        "lastModified": 1698240093,
-        "narHash": "sha256-0DMkGcW4AyyX4lreXycPSK5wG/E0idDnTqLIYyhxZQA=",
+        "lastModified": 1700229013,
+        "narHash": "sha256-zunvEbtfUhNpqO7xidU5j7UR/8lVH05mJrClhLE75Z8=",
         "owner": "oar-team",
         "repo": "nur-kapack",
-        "rev": "7434ca26bee07fbc36a973fbe44a3bcab6cb5b9c",
+        "rev": "3a1812c451c3e4150e86a4fd48bdca2b3cb4a0dd",
         "type": "github"
       },
       "original": {
@@ -88,7 +125,7 @@
     },
     "kapack_2": {
       "inputs": {
-        "flake-utils": "flake-utils_3",
+        "flake-utils": "flake-utils_4",
         "nixpkgs": [
           "nxc",
           "nixpkgs"
@@ -111,16 +148,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1685566663,
-        "narHash": "sha256-btHN1czJ6rzteeCuE/PNrdssqYD2nIA4w48miQAFloM=",
+        "lastModified": 1700403855,
+        "narHash": "sha256-Q0Uzjik9kUTN9pd/kp52XJi5kletBhy29ctBlAG+III=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "4ecab3273592f27479a583fb6d975d4aba3486fe",
+        "rev": "0c5678df521e1407884205fe3ce3cf1d7df297db",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "23.05",
+        "ref": "nixos-23.05",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -157,25 +194,40 @@
         "type": "github"
       }
     },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1685566663,
+        "narHash": "sha256-btHN1czJ6rzteeCuE/PNrdssqYD2nIA4w48miQAFloM=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "4ecab3273592f27479a583fb6d975d4aba3486fe",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "23.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nxc": {
       "inputs": {
-        "flake-utils": "flake-utils_2",
+        "flake-utils": "flake-utils_3",
         "kapack": "kapack_2",
         "nixpkgs": [
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1699367568,
-        "narHash": "sha256-y/jPqLJ1kcjM5y86QNl1dA7o5IzA49G2cjkG9QwK6lw=",
-        "ref": "nixpkgs-2305",
-        "rev": "632f1d053a624dd0bc6be72ad15cfb0936a52ef3",
-        "revCount": 548,
+        "lastModified": 1699803566,
+        "narHash": "sha256-ETbOO8eubWvNIjnhQxMUWd2qQzeiA9iQzYDFYA0NvvY=",
+        "ref": "refs/heads/master",
+        "rev": "9e81a08695f26636ca8123eb4aa822ae18e58241",
+        "revCount": 552,
         "type": "git",
         "url": "https://gitlab.inria.fr/nixos-compose/nixos-compose.git"
       },
       "original": {
-        "ref": "nixpkgs-2305",
         "type": "git",
         "url": "https://gitlab.inria.fr/nixos-compose/nixos-compose.git"
       }
@@ -183,12 +235,28 @@
     "root": {
       "inputs": {
         "NUR": "NUR",
+        "bebidaOptimizer": "bebidaOptimizer",
         "kapack": "kapack",
-        "nixpkgs": "nixpkgs",
+        "nixpkgs": "nixpkgs_2",
         "nxc": "nxc"
       }
     },
     "systems": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
+    "systems_2": {
       "locked": {
         "lastModified": 1681028828,
         "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
