@@ -7,7 +7,7 @@ in
   roles =
     let
       tokenFile = pkgs.writeText "token" "p@s$w0rd";
-      commonConfig = import ./common_config.nix { inherit pkgs modulesPath; };
+      commonConfig = import ./common_config.nix { inherit pkgs modulesPath; HPCScheduler = "SLURM";};
       slurmConfig = import ./slurm_config.nix { inherit pkgs; nbNodes = nbNodesStr; };
     in
     {

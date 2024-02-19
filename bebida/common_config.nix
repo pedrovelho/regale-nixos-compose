@@ -1,4 +1,4 @@
-{ pkgs, modulesPath }:
+{ pkgs, modulesPath, HPCScheduler }:
 let
   inherit (import "${toString modulesPath}/tests/ssh-keys.nix" pkgs) snakeOilPrivateKey snakeOilPublicKey;
   toBase64 = (import ./helpers.nix { inherit (pkgs) lib; }).toBase64;
@@ -16,6 +16,7 @@ in
     BEBIDA_SSH_PORT="22"
     BEBIDA_SSH_USER="root"
     KUBECONFIG=/etc/bebida/kubeconfig.yaml
+    BEBIDA_HPC_SCHEDULER_TYPE=${HPCScheduler}
   '';
 
   environment.systemPackages = [
@@ -29,6 +30,7 @@ in
 
   environment.shellAliases = {
     k = "k3s kubectl";
+    kubectl = "k3s kubectl";
     kgp = "k3s kubectl get pods -A";
   };
 

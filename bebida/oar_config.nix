@@ -95,7 +95,7 @@ in
       LOG_LEVEL = "3";
       HIERARCHY_LABELS = "resource_id,network_address,cpuset";
       QUOTAS = "yes";
-      QUOTAS_CONF_FILE = "/etc/oar-quotas.json";
+      QUOTAS_CONF_FILE = "/etc/oar/quotas.json";
       SERVER_PROLOGUE_EXEC_FILE = "/etc/oar/bebida_prolog.sh";
       SERVER_EPILOGUE_EXEC_FILE = "/etc/oar/bebida_epilog.sh";
     };

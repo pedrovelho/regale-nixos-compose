@@ -2,11 +2,11 @@
   "nodes": {
     "NUR": {
       "locked": {
-        "lastModified": 1700578383,
-        "narHash": "sha256-ij/q6/GJc/z7hML30aAVHw+bTKSV+Qfx4iGLimrZ0lw=",
+        "lastModified": 1701357796,
+        "narHash": "sha256-MnLeyHFGVK8aovMuDZy2KmFVCRPqW0KVajXOarCxlBk=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "ddbb03620f56d5e27fdb494a712f3735a97da448",
+        "rev": "95a0e6e9948e39883c216adeacc4815236833fed",
         "type": "github"
       },
       "original": {
@@ -21,17 +21,17 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1700833745,
-        "narHash": "sha256-OgMaGTUAa1xNvnk4N+pYQskZgrd01UrPFk1CBqrzoEE=",
-        "owner": "RyaxTech",
-        "repo": "bebida-optimization-service",
-        "rev": "df6f31c69abd986f8193c7310d508da66b33440f",
-        "type": "github"
+        "lastModified": 1701361716,
+        "narHash": "sha256-zqqSMwNWOWgRr/vFLykU1a0G7i+dbYho27aQ5XFRh90=",
+        "ref": "refs/heads/add-oar",
+        "rev": "78debc22c56f552af41b0322db71d8c4552d498e",
+        "revCount": 30,
+        "type": "git",
+        "url": "file:///home/mmercier/Projects/bebida-optimization-service"
       },
       "original": {
-        "owner": "RyaxTech",
-        "repo": "bebida-optimization-service",
-        "type": "github"
+        "type": "git",
+        "url": "file:///home/mmercier/Projects/bebida-optimization-service"
       }
     },
     "flake-utils": {
@@ -109,11 +109,11 @@
         "nixpkgs2111": "nixpkgs2111"
       },
       "locked": {
-        "lastModified": 1700229013,
-        "narHash": "sha256-zunvEbtfUhNpqO7xidU5j7UR/8lVH05mJrClhLE75Z8=",
+        "lastModified": 1701348508,
+        "narHash": "sha256-cpVz3JYGT0snZwqlJXRp/ijdDduApxfiIF4jDieHtiI=",
         "owner": "oar-team",
         "repo": "nur-kapack",
-        "rev": "3a1812c451c3e4150e86a4fd48bdca2b3cb4a0dd",
+        "rev": "61f618147fa7ab3a9a521451c64cf2d7df694037",
         "type": "github"
       },
       "original": {
@@ -219,11 +219,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1699803566,
-        "narHash": "sha256-ETbOO8eubWvNIjnhQxMUWd2qQzeiA9iQzYDFYA0NvvY=",
+        "lastModified": 1700745720,
+        "narHash": "sha256-2c0Gp/Z7WBWF7M0gshglyIZhwhPrRVr6+9RsKA2FKto=",
         "ref": "refs/heads/master",
-        "rev": "9e81a08695f26636ca8123eb4aa822ae18e58241",
-        "revCount": 552,
+        "rev": "2ffb0763e4e457008e4c9949808c23e3a250f625",
+        "revCount": 557,
         "type": "git",
         "url": "https://gitlab.inria.fr/nixos-compose/nixos-compose.git"
       },

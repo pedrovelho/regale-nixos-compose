@@ -1,7 +1,7 @@
 { pkgs, modulesPath, nur, helpers, flavour, ... }: {
   roles =
     let
-      commonConfig = import ./common_config.nix { inherit pkgs modulesPath; };
+      commonConfig = import ./common_config.nix { inherit pkgs modulesPath; HPCScheduler = "OAR"; };
       oarConfig = import ./oar_config.nix { inherit pkgs nur flavour modulesPath; };
       tokenFile = pkgs.writeText "token" "p@s$w0rd";
     in
