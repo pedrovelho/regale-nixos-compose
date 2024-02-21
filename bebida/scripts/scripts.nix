@@ -2,6 +2,8 @@
 {
 
   add_resources =
+    # TODO: resources_creation last parameter is the `vfactor` that emulate multiple resources per node even if there is only one core
+    # Maybe add this as property of the composition
     pkgs.writers.writePython3Bin "add_resources"
       {
         libraries = [ pkgs.nur.repos.kapack.oar ];
@@ -12,7 +14,7 @@
 
       session = init_and_get_session()
 
-      resources_creation(session, "node", int(sys.argv[1]), int(sys.argv[2]))
+      resources_creation(session, "node", int(sys.argv[1]), int(sys.argv[2]), 2)
     '';
 
   wait_db =
