@@ -12,7 +12,7 @@ in
   ];
   services.bebida-shaker.environmentFile = pkgs.writeText "envFile" ''
     BEBIDA_SSH_PKEY=${toBase64 (builtins.readFile sshPrivateKey)}
-    BEBIDA_SSH_HOSTNAME="127.0.0.1"
+    BEBIDA_SSH_HOSTNAME="frontend"
     BEBIDA_SSH_PORT="22"
     BEBIDA_SSH_USER="root"
     KUBECONFIG=/etc/bebida/kubeconfig.yaml

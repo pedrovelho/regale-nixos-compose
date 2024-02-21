@@ -78,7 +78,7 @@ in
   #   mode = "0777";
   # };
 
-  environment.etc."oar-quotas.json" = {
+  environment.etc."oar/quotas.json" = {
     text = ''
       {
         "quotas": {

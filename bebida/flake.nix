@@ -9,7 +9,8 @@
     NUR.url = "github:nix-community/NUR";
     kapack.url = "github:oar-team/nur-kapack?ref=regale";
     kapack.inputs.nixpkgs.follows = "nixpkgs";
-    bebidaOptimizer.url = "github:RyaxTech/bebida-optimization-service";
+    # bebidaOptimizer.url = "github:RyaxTech/bebida-optimization-service";
+    bebidaOptimizer.url = "/home/mmercier/Projects/bebida-optimization-service";
   };
 
   outputs = { self, nixpkgs, nxc, NUR, kapack, bebidaOptimizer }:
