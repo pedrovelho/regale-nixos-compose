@@ -3,6 +3,7 @@
     let
       commonConfig = import ./common_config.nix { inherit pkgs modulesPath; HPCScheduler = "OAR"; };
       oarConfig = import ./oar_config.nix { inherit pkgs nur flavour modulesPath; };
+      demoConfig = import ./demo.nix { };
       tokenFile = pkgs.writeText "token" "p@s$w0rd";
     in
     {
@@ -16,7 +17,7 @@
         services.oar.web.monika.enable = true;
       };
       server = { ... }: {
-        imports = [ commonConfig oarConfig ];
+        imports = [ commonConfig oarConfig demoConfig ./ryax.nix ];
         nxc.sharedDirs."/users".export = true;
 
         services.oar.server.enable = true;
@@ -32,6 +33,8 @@
           echo 'bind-address: "'$SERVER'"' > /etc/k3s.yaml
           echo 'node-external-ip: "'$SERVER'"' >> /etc/k3s.yaml
         '';
+
+        services.ryax-install.enable = true;
 
         services.k3s = {
           inherit tokenFile;
@@ -51,6 +54,23 @@
 
         services.oar.node.enable = true;
 
+        services.k3s = {
+          inherit tokenFile;
+          enable = true;
+          role = "agent";
+          serverAddr = "https://server:6443";
+          # Add a taint on Bebida nodes to avoid normal pod to be schedule here
+          # Pods need to have the folowing toleration to be schedule on this pod
+          #
+          #   tolerations:
+          #   - key: "bebida"
+          #     operator: "Exists"
+          #     effect: "NoSchedule"
+          extraFlags = "--node-taint=bebida=hpc:NoSchedule";
+        };
+      };
+      safe-node = { ... }: {
+        imports = [ commonConfig ];
         services.k3s = {
           inherit tokenFile;
           enable = true;

@@ -21,10 +21,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "dirtyRev": "6261fe99c159ca8cb1ec7398119cec36da3d650c-dirty",
-        "dirtyShortRev": "6261fe9-dirty",
-        "lastModified": 1708521625,
-        "narHash": "sha256-O+ww1TVlYWXvo8c79nkXadrqBxm5M3MzCgl5nR4wnpA=",
+        "lastModified": 1709215411,
+        "narHash": "sha256-0tAtioRcySfbf+E4zNZ7G/NX91ncjCyKDGFbGGwu650=",
+        "ref": "refs/heads/main",
+        "rev": "6d60a0b87d2b5b4f884cb683b8c2ada3e0db7c34",
+        "revCount": 39,
         "type": "git",
         "url": "file:///home/mmercier/Projects/bebida-optimization-service"
       },

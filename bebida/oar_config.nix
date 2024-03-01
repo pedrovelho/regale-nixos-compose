@@ -110,7 +110,7 @@ in
         echo $num_cores > /etc/num_cores
 
         if [[ -f /etc/nxc/deployment-hosts ]]; then
-          num_nodes=$(grep node /etc/nxc/deployment-hosts | wc -l)
+          num_nodes=$(grep -E "node[0-9]+" /etc/nxc/deployment-hosts | wc -l)
         else
           num_nodes=$(jq -r '[.nodes[] | select(contains("node"))]| length' /etc/nxc/deployment.json)
         fi

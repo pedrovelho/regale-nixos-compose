@@ -54,7 +54,15 @@ node2    Ready    <none>                 2m36s   v1.23.6+k3s1
 node1    Ready    <none>                 2m36s   v1.23.6+k3s1
 ```
 
-## Use
+You can access the OAR API, Drawgantt and Monika interface by exposing the
+internal port 80 on your machine with:
+```sh
+ssh -L 8080:localhost:80 root@localhost -p 22022
+```
+
+Then in your browser access the Gantt with: [http://localhost:8080/drawgantt]()
+
+## Usage
 
 Now you can use OAR and K3s with Bebida enabled. On the server wtach the k3s
 nodes to state with `k get nodes -w`, you should see:
@@ -80,3 +88,4 @@ node1    Ready,SchedulingDisabled   <none>                 8m11s   v1.23.6+k3s1
 node1    Ready,SchedulingDisabled   <none>                 8m11s   v1.23.6+k3s1
 node1    Ready                      <none>                 8m15s   v1.23.6+k3s1
 ```
+
