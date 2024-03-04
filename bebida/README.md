@@ -18,7 +18,9 @@ First you'll need to install NXC. See main [README](../README.md) for more infor
 # Go in this repository's directory
 cd regale-nixos-compose/bebida
 # Build the environment
-nxc build -f vm
+nxc build -C oar::vm
+# OR
+nxc build -C slurm::vm
 ```
 
 ## Deploy on VMs
@@ -64,7 +66,7 @@ Then in your browser access the Gantt with: [http://localhost:8080/drawgantt]()
 
 ## Usage
 
-Now you can use OAR and K3s with Bebida enabled. On the server wtach the k3s
+Now you can use OAR and K3s with Bebida enabled. On the server watch the k3s
 nodes to state with `k get nodes -w`, you should see:
 ```bash
 [root@server:~]# k get nodes -w
@@ -89,3 +91,4 @@ node1    Ready,SchedulingDisabled   <none>                 8m11s   v1.23.6+k3s1
 node1    Ready                      <none>                 8m15s   v1.23.6+k3s1
 ```
 
+For more details on the Bebida optimization service see [https://github.com/RyaxTech/bebida-optimization-service]()
