@@ -7,16 +7,21 @@
       tokenFile = pkgs.writeText "token" "p@s$w0rd";
     in
     {
+      frontend = { ... }: {
+        imports = [ commonConfig oarConfig ];
+
+        services.oar.client.enable = true;
+        services.oar.web.enable = true;
+        services.oar.web.drawgantt.enable = true;
+        services.oar.web.monika.enable = true;
+      }
+
       server = { ... }: {
         imports = [ commonConfig oarConfig demoConfig ./ryax.nix ];
         nxc.sharedDirs."/users".export = true;
 
         services.oar.server.enable = true;
         services.oar.dbserver.enable = true;
-        services.oar.client.enable = true;
-        services.oar.web.enable = true;
-        services.oar.web.drawgantt.enable = true;
-        services.oar.web.monika.enable = true;
 
         services.bebida-shaker.enable = true;
 
@@ -76,19 +81,19 @@
 
     server.wait_for_unit('oar-server.service')
     # Submit job with script under user1
-    server.succeed('su - user1 -c "oarsub -l nodes=2 \"hostname\""')
+    frontend.succeed('su - user1 -c "oarsub -l nodes=2 \"hostname\""')
 
     # Wait output job file
-    server.wait_for_file('/users/user1/OAR.1.stdout', timeout=30)
+    frontend.wait_for_file('/users/user1/OAR.1.stdout', timeout=30)
 
     # Check job's final state
-    server.succeed("oarstat -j 1 -s | grep Terminated")
+    frontend.succeed("oarstat -j 1 -s | grep Terminated")
 
-    server.succeed('su - user1 -c "oarsub -l nodes=2,walltime=1 \"sleep 60\""')
-    server.succeed('su - user1 -c "oarsub -l nodes=1,walltime=3 \"sleep 180\""')
-    server.succeed('su - user1 -c "oarsub -l nodes=1,walltime=2 \"sleep 120\""')
+    frontend.succeed('su - user1 -c "oarsub -l nodes=2,walltime=1 \"sleep 60\""')
+    frontend.succeed('su - user1 -c "oarsub -l nodes=1,walltime=3 \"sleep 180\""')
+    frontend.succeed('su - user1 -c "oarsub -l nodes=1,walltime=2 \"sleep 120\""')
 
-    server.succeed('curl http://localhost:8080/drawgantt/')
+    frontend.succeed('curl http://localhost/drawgantt/')
 
     server.wait_for_unit('k3s.service')
     server.wait_until_succeeds('k3s kubectl get nodes | grep Ready', timeout=10)
@@ -97,5 +102,9 @@
 
     server.succeed('k3s kubectl apply -f /etc/demo/pod-sleep-100.yml')
     server.wait_until_succeeds('k3s kubectl get pods | grep Running', timeout=60)
+
+    server.wait_for_unit('ryax-install.service')
+    server.succeed('curl http://localhost/app/')
+    log("🚀 BeBiDa with OAR, K3s and Ryax is up and running!")
   '';
 }
