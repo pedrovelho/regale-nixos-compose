@@ -14,7 +14,7 @@
 
       session = init_and_get_session()
 
-      resources_creation(session, "node", int(sys.argv[1]), int(sys.argv[2]), 2)
+      resources_creation(session, "node", int(sys.argv[1]), int(sys.argv[2]))
     '';
 
   wait_db =

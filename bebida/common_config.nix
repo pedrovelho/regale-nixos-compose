@@ -26,7 +26,10 @@ in
     pkgs.python3Packages.clustershell
     pkgs.htop
     pkgs.tree
+    pkgs.cri-tools
   ];
+
+  environment.noXlibs = false;
 
   environment.shellAliases = {
     k = "k3s kubectl";

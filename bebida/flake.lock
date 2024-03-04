@@ -23,15 +23,15 @@
       "locked": {
         "lastModified": 1709215411,
         "narHash": "sha256-0tAtioRcySfbf+E4zNZ7G/NX91ncjCyKDGFbGGwu650=",
-        "ref": "refs/heads/main",
+        "owner": "RyaxTech",
+        "repo": "bebida-optimization-service",
         "rev": "6d60a0b87d2b5b4f884cb683b8c2ada3e0db7c34",
-        "revCount": 39,
-        "type": "git",
-        "url": "file:///home/mmercier/Projects/bebida-optimization-service"
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "file:///home/mmercier/Projects/bebida-optimization-service"
+        "owner": "RyaxTech",
+        "repo": "bebida-optimization-service",
+        "type": "github"
       }
     },
     "flake-utils": {
