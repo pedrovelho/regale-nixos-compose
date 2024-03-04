@@ -9,6 +9,7 @@
     {
       frontend = { ... }: {
         imports = [ commonConfig oarConfig ];
+        nxc.sharedDirs."/users".export = true;
 
         services.oar.client.enable = true;
         services.oar.web.enable = true;
