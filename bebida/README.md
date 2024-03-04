@@ -1,9 +1,9 @@
 # Introduction
 
-This composition proposes an environment with Bebida implemented on Kubernetes and and OAR.
+This composition proposes an environment with Bebida implemented on Kubernetes and OAR or Slurm.
 Bebida is collocation mechanism that allows any dynamic resource management
 system (here Kubernetes) to use resources leave idle by an HPC resources
-management system (here  OAR). It is siply base on prolog and epilog scripts.
+management system (here  OAR). It is simply base on prolog and epilog scripts.
 See https://hal.science/hal-01633507/file/bigdata_hpc_colocation.pdf for more
 details.
 

@@ -72,14 +72,14 @@
     import os
 
     start_all()
-    log.info("=== Environment vars are: \n" + os.environ)
+    log.info("=== Environment vars are: \n" + str(os.environ))
 
     server.wait_for_unit('oar-server.service')
     # Submit job with script under user1
     server.succeed('su - user1 -c "oarsub -l nodes=2 \"hostname\""')
 
     # Wait output job file
-    server.wait_for_file('/users/user1/OAR.1.stdout')
+    server.wait_for_file('/users/user1/OAR.1.stdout', timeout=30)
 
     # Check job's final state
     server.succeed("oarstat -j 1 -s | grep Terminated")
