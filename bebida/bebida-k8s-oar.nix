@@ -84,7 +84,7 @@
     frontend.succeed('su - user1 -c "oarsub -l nodes=2 \"hostname\""')
 
     # Wait output job file
-    frontend.wait_for_file('/users/user1/OAR.1.stdout', timeout=30)
+    frontend.wait_for_file('/users/user1/OAR.1.stdout')
 
     # Check job's final state
     frontend.succeed("oarstat -j 1 -s | grep Terminated")
