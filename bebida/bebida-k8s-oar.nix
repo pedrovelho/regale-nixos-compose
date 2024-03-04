@@ -9,7 +9,7 @@
     {
       frontend = { ... }: {
         imports = [ commonConfig oarConfig ];
-        nxc.sharedDirs."/users".export = true;
+        nxc.sharedDirs."/users".server = "server";
 
         services.oar.client.enable = true;
         services.oar.web.enable = true;
@@ -19,6 +19,7 @@
 
       server = { ... }: {
         imports = [ commonConfig oarConfig demoConfig ./ryax.nix ];
+        # Make this machine an NFS server for users homes
         nxc.sharedDirs."/users".export = true;
 
         services.oar.server.enable = true;
