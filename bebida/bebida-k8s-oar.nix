@@ -7,21 +7,16 @@
       tokenFile = pkgs.writeText "token" "p@s$w0rd";
     in
     {
-      frontend = { ... }: {
-        imports = [ commonConfig oarConfig ];
-        nxc.sharedDirs."/users".server = "server";
-
-        services.oar.client.enable = true;
-        services.oar.web.enable = true;
-        services.oar.web.drawgantt.enable = true;
-        services.oar.web.monika.enable = true;
-      };
       server = { ... }: {
         imports = [ commonConfig oarConfig demoConfig ./ryax.nix ];
         nxc.sharedDirs."/users".export = true;
 
         services.oar.server.enable = true;
         services.oar.dbserver.enable = true;
+        services.oar.client.enable = true;
+        services.oar.web.enable = true;
+        services.oar.web.drawgantt.enable = true;
+        services.oar.web.monika.enable = true;
 
         services.bebida-shaker.enable = true;
 
@@ -69,27 +64,38 @@
           extraFlags = "--node-taint=bebida=hpc:NoSchedule";
         };
       };
-      safe-node = { ... }: {
-        imports = [ commonConfig ];
-        services.k3s = {
-          inherit tokenFile;
-          enable = true;
-          role = "agent";
-          serverAddr = "https://server:6443";
-        };
-      };
     };
 
   rolesDistribution = { node = 2; };
 
   testScript = ''
+    import os
+
+    start_all()
+    log.info("=== Environment vars are: \n" + os.environ)
+
+    server.wait_for_unit('oar-server.service')
     # Submit job with script under user1
-    frontend.succeed('su - user1 -c "cd && oarsub -l nodes=2 \"hostname\""')
+    server.succeed('su - user1 -c "oarsub -l nodes=2 \"hostname\""')
 
     # Wait output job file
-    frontend.wait_for_file('/users/user1/OAR.1.stdout')
+    server.wait_for_file('/users/user1/OAR.1.stdout')
 
     # Check job's final state
-    frontend.succeed("oarstat -j 1 -s | grep Terminated")
+    server.succeed("oarstat -j 1 -s | grep Terminated")
+
+    server.succeed('su - user1 -c "oarsub -l nodes=2,walltime=1 \"sleep 60\""')
+    server.succeed('su - user1 -c "oarsub -l nodes=1,walltime=3 \"sleep 180\""')
+    server.succeed('su - user1 -c "oarsub -l nodes=1,walltime=2 \"sleep 120\""')
+
+    server.succeed('curl http://localhost:8080/drawgantt/')
+
+    server.wait_for_unit('k3s.service')
+    server.wait_until_succeeds('k3s kubectl get nodes | grep Ready', timeout=10)
+    # This can take some time depending on your network connection
+    server.wait_until_succeeds('k3s kubectl get pods -A | grep Running', timeout=90)
+
+    server.succeed('k3s kubectl apply -f /etc/demo/pod-sleep-100.yml')
+    server.wait_until_succeeds('k3s kubectl get pods | grep Running', timeout=60)
   '';
 }

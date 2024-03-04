@@ -39,7 +39,7 @@ server.wait_until_succeeds('k3s kubectl get pods -A | grep Running', timeout=90)
 #with open("/tmp/demo-pod.yml", "w") as pod_def_file:
 #    pod_def_file.write(pod_def)
 #
-#log.info("Current directory is " + os.getcwd())
+log.info("Environment vars are: " + os.environ)
 # server.copy_from_host('/tmp/demo-pod.yml', '/tmp/pod.yml')
 server.succeed('k3s kubectl apply -f /etc/demo/pod-sleep-100.yml')
 server.wait_until_succeeds('k3s kubectl get pods | grep Running', timeout=60)
