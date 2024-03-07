@@ -31,5 +31,6 @@
       };
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
       devShell.${system} = nxc.devShells.${system}.nxcShellFull;
+      lightESP = nixpkgs.legacyPackages.x86_64-linux.callPackage ./pkgs/light-ESP.nix {};
     };
 }

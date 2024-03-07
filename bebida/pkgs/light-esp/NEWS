@@ -1,0 +1,28 @@
+
+ESP-2.2.1	2008/05/07
+* Put the pseudo-random number generator into its own package so multiple
+  sequences could be generated.
+* runesp submits an initial batch of jobs (-I option)
+* runesp submits the remaining jobs every N seconds where N has a gaussian
+  distribution around the value given by the -T option.  The gaussian width
+  is 1/6 of this value.
+* sim/FCFS.pm scheduler now pre-empts further job starts when a "Z" job
+  is submitted, thus giving the "Z" job ultimate priority.
+
+ESP-2.2.0	2008/03/27
+* packaged with GNU autoconf/automake tools
+* configure can discover the necessary resources required for the
+  compiled sources
+* extensive rewrite of the perl scripts and modules
+* added a test mode
+* included a simple batch simulator
+
+ESP-2.1.1	2006/08
+* replaced cpp define for chkpt to PE_CHKPT
+* allowed MPI_Wtime as timer in cases where -DUSE_* is not given
+
+ESP-2.1		2006/08
+* support for 64 bit platforms , fixed "unsigned long" problems in 64
+* added xchksum and reference output to test sha1 outside batch
+* better support for various batch systems by abstracted perl interface
+

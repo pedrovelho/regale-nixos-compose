@@ -1,0 +1,123 @@
+:
+# use perl
+    eval 'exec perl -S $0 ${1+"$@"}'
+	if $running_under_some_shell;
+$running_under_some_shell = 0;
+
+use strict;
+use warnings;
+
+our ($ESPHOME, $ESPSCRATCH, $basedir);
+# find the base directory of the script
+BEGIN {
+	$basedir = $0;
+	if ($basedir =~ s{/[^/]*$}{} ) {
+		$basedir = "."	if $basedir =~ /^$/;
+	} else {
+		$basedir = ".";
+	}
+	use Env qw(ESPHOME ESPSCRATCH);
+	if ((! defined $ESPHOME) || ($ESPHOME =~ /^$/)) {
+		$ESPHOME = "$basedir/..";
+		print STDERR "setting ESPHOME=$ESPHOME\n";
+	}
+	if ((! defined $ESPSCRATCH) || ($ESPSCRATCH =~ /^$/)) {
+		$ESPSCRATCH = $ESPHOME;
+		print STDERR "setting ESPSCRATCH=$ESPSCRATCH\n";
+	}
+}
+
+sub usage {
+	$0 =~ s{^.*/}{};	# strip to basename
+	print <<EOF ;
+$0 - Autogenerate batch scripts needed for the ESP test
+	Platform- and site-dependencies are isolate in modules
+	see <$ESPHOME/pm/*.pm>
+
+$0 [-h][-v] [[-p N] -s SIZE -b BATCH | -x]
+	-h		this helpful info
+	-v		verbose info
+	-s SIZE		system size (number of processing elements - PEs)
+	-b BATCH	batch type to use
+	-p N		pack the system with N PEs per node (default = 1)
+	-x		remove the generated batch files
+	-l		list generated batch file names
+
+Should set these environment variables:
+	ESPHOME		where the ESP root directory is located
+	ESPSCRATCH	used by some of the batch modules
+
+EOF
+}
+
+use lib "$ESPHOME/pm";
+use Getopt::Std;
+
+#
+#  Directory pathnames
+#
+our $espout   = "$ESPHOME/logs";
+#
+#
+#  Job mix description
+#
+our %jobdesc = (
+#
+#  Job            Size     Count      Run-time
+# ------------------------------------------------
+#
+    A       =>  [ 0.03125,   75,         22 ],
+    B       =>  [ 0.06250,    9,         27 ],
+    C       =>  [ 0.50000,    3,         45 ],
+    D       =>  [ 0.25000,    3,         51 ],
+    E       =>  [ 0.50000,    3,         26 ],
+    F       =>  [ 0.06250,    9,        154 ],
+    G       =>  [ 0.12500,    6,        111 ],
+    H       =>  [ 0.15820,    6,        89 ],
+    I       =>  [ 0.03125,   24,        119 ],
+    J       =>  [ 0.06250,   24,         60 ],
+    K       =>  [ 0.09570,   15,         41 ],
+    L       =>  [ 0.12500,   36,         30 ],
+    M       =>  [ 0.25000,   15,         15 ],
+    Z       =>  [ 1.00000,    2,         10 ],
+);
+
+#
+# Parse args
+#
+our ($packed, $syssize, $batchtype,$timer) = (1, 0,"","");
+our ($opt_h, $opt_v, $opt_p, $opt_s, $opt_b, $opt_x, $opt_l); 
+getopts("hvp:s:b:xl");
+$opt_b = "BATCH"	if (! defined $opt_b) && ($opt_x || $opt_l);
+if ($opt_h || (! defined $opt_s) || (! defined $opt_b)) {
+	&usage;
+	exit;
+}
+if ($opt_s) {
+	$syssize = $opt_s;
+}
+if ($opt_b) {
+	$batchtype = uc $opt_b;
+}
+if ($opt_p) {
+	$packed = $opt_p;
+}
+
+#
+#
+#
+
+require "$batchtype.pm";
+my $batchsys = new $batchtype;
+$batchsys->verbose(1)	if $opt_v;
+my $job = "create_jobs";
+$job = "list_jobs"	if $opt_l;
+$job = "remove_jobs"	if $opt_x;
+
+$batchsys->$job();
+
+if ($opt_l) {
+	foreach my $i (@{$batchsys->list}) {
+		print "$i\n";
+	}
+}

@@ -1,0 +1,32 @@
+
+   Synthetic Application for ESP2
+   -------------------------------
+
+   This application reads an elapsed time from the command
+   line and executes for approximately that interval. For
+   example,
+               ./pchksum -t 100 -u 5000
+   will run the application for 100 seconds, where the message passing
+   will occur every 5 seconds. The only output will be the observed
+   (internal) elapsed time and iteration count. Use "-v" flag to see
+   more output, or "-h" for more usage options.
+
+
+   Alternatively, the application can take an iteration 
+   count instead of a run time, for example,
+               ./pchksum -n 22000
+   For an idea of the iteration count, see the line 
+   "Iteration count:" in the verbose output.
+
+
+   To use with the ESP test, run "pchksum" at the partition
+   size from Table X and specify the run time using the 
+   "-t" flag. Enter the observed elapsed wallclock time from 
+   "/bin/time" into Table X. This time is used to compute the
+   AMT. The output will contain an "Iteration count" field,
+   use this integer to configure the scripts for each job
+   type.  
+
+ 
+   
+

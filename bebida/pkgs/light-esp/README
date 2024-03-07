@@ -1,0 +1,229 @@
+
+  ESP2 Test
+  Version 2.2
+
+  1. BACKGROUND
+
+  The Effective System Performance (ESP) test was devised to provide a
+  metric for resource management on parallel systems. The results depend
+  on attributes such as parallel launch time, job scheduling efficiency
+  and job preemption. The test has been deliberately constructed to be
+  processor-speed independent with low contention for shared resources
+  (e.g. the filesystem). As such, it is different from a throughput test
+  although the mechanics of the test are similar. Further discussion of
+  ESP is available at www.nersc.gov/~dhbailey/dhbpapers/esp-sc2000.pdf.
+  The paper is available with this distribution also.
+
+  The objective of the ESP test is to run a fixed number of parallel
+  jobs through a batch scheduler in the minimum elapsed time. Each job
+  runs the same synthetic application, "pchksum", for a predetermined
+  length of time. The test result is determined, primarily, by the
+  efficiency of the scheduler and the overhead of launching parallel
+  jobs. There are 230 jobs derived from a list of 14 job types. The
+  table below list the job types with their fractional-sizes, instance
+  counts and target run times. See the article referenced above for
+  details on the origin and derivation of this table.
+
+
+    Job-type      Fract-Size   Count   Target Run Time
+   -------------------------------------------------------
+        A          0.03125        75          267 
+        B          0.06250         9          322 
+        C          0.50000         3          534 
+        D          0.25000         3          616 
+        E          0.50000         3          315 
+        F          0.06250         9         1846 
+        G          0.12500         6         1334 
+        H          0.15820         6         1067 
+        I          0.03125        24         1432 
+        J          0.06250        24          725 
+        K          0.09570        15          487 
+        L          0.12500        36          366 
+        M          0.25000        15          187 
+        Z          1.00000         2         ~100 
+                                ====
+                          total  230
+
+  The fractional-size is simply the size of the job as a fraction of
+  total system size. For example, if the system under test has 64
+  processors, then the size of job-type B is 4 (= 0.06250 x 64)
+  processors. Thus, the ESP test can be applied to any system size and
+  has been verified on 64, 512 and 2048 processor systems. 
+  
+
+
+  2. TECHNICAL OVERVIEW
+   
+  The test is run from a master perl script, "runesp". The script
+  scans the "jobmix" sub-directory for the job scripts to submit. The
+  jobs are submitted in a pseudo-random order that is identical over
+  repeated runs. For each job, a process is forked to submit the
+  job. Successive submissions may be separated by 1 second to prevent
+  flooding the batch queue. After submitting the jobs, the script
+  periodically monitors the run-time environment and logs system activity
+  into the transcript, "LOG". Additionally, the master script will
+  submit the two Z scripts after 2400 and 7200 seconds have elapsed.
+ 
+  The individual jobs are simple self-contained scripts that are created
+  specifically for the target batch system. Each script logs its start
+  and end time into the "LOG" file and runs the synthetic application
+  for the requisite time.
+
+
+
+  3. INSTALL
+
+  The implementation of ESP is necessarily highly dependent on the 
+  target platform, batch scheduler and site configuration. A significant 
+  amount of modification, configuration and validation is required 
+  to enable a correct ESP run. The scripts provided should be 
+  considered as templates for further modification insofar as the 
+  rules and intent of the ESP test are preserved. Knowledge of perl 
+  is essential.
+
+    a) Set and export the environment variable, ESPHOME = `pwd`
+
+
+    b) Examine the perl modules in the sub-directory "pm". These are
+       working examples from different batch schedulers and sites,
+       e.g. LOADL = Loadleveler on SP systems.  
+
+       Edit a module that is similar to the target batch system. The
+       functions "getrunning", "monitor_queues" and "submit" are
+       platform-specific and must be modified to suit. These functions
+       are called by the "runesp" script. 
+
+
+    c) The last function in the module, "create_jobs", uses an
+       embedded template to generate the job scripts and is invoked by
+       the script "jobmix/mkjobmix". To understand how it works, run
+       as follows;
+
+           mkjobmix -s <SYSTEM_SIZE> -b <BATCH_TYPE>
+
+       where BATCH_TYPE matches the perl module name of the target
+       batch system and SYSTEM_SIZE is the system size. This should
+       create 230 scripts. Examine one of the scripts created and
+       correct the perl module accordingly. Test the scripts by
+       submitting to the batch system manually. The Z scripts may need
+       special modification, especially to expedite the Z jobs.
+       There are other options to mkjobmix which can be viewed with:
+           mkjobmix -h
+
+
+    d) Many, if not all, of the necessary libraries, header files, or
+       required functions can be discovered by the configure script in
+       this directory or in the src/ directory.  If you require a special
+       "wrapped" Std-C compiler such as mpicc to find the MPI libraries
+       then run the configure script with:
+
+           env CC=mpicc configure
+
+       Type make to create all the executables,
+       "pchksum","fixtime","sleeper", and "Epoch". The latter simply
+       prints the seconds since epoch and is identical to "date +%s"
+       on Linux/GNU systems.
+       The executables will need to be "installed" my running "make
+       install" which just places them into a sub-directory ./bin/.
+
+
+    e) Once all the jobmix/ scripts are generated and the suitable batch
+       module has been selected and modified as necessary, the ESP test
+       can be run on the target system with:
+           runesp -v -b <BATCH>
+
+       target system. There should not be any need to modify this script.
+       Run the script in debug mode using the "-d" flag which will show
+       what batch submission commands would be executed.  The usage info
+       is shown when using the -h option.
+
+
+
+  4. CONFIGURING THE QUEUE SYSTEM
+
+  All regular job types, A-M, should be targeted to run in the normal
+  queue used for production computing. Obviously, the queue should have
+  access to all the computational processors.  
+  
+  The job type, Z, may need a special high-priority queue since it must
+  be expedited ahead of all regular jobs. Where available, this special
+  queue should preempt other running jobs. The preemption action may
+  range from suspension, roll-out or check-pointing. However, early
+  termination is probably not an option unless the system can restart
+  the terminated jobs in the previous order.
+  
+  As a last resort, the system can be drained of regular jobs until 
+  the Z job can be run. NO OTHER JOB IS ALLOWED TO START ONCE THE Z JOB
+  HAS BEEN SUBMITTED. For back-fill schedulers, certain artificial
+  measures may be needed to disable back-filling ahead of the Z launch
+  time. (For example, setting very long wall-clock limits in the job
+  script). Note that manual intervention is prohibited upon start of the
+  ESP test.
+
+  
+  
+  5. RUNNING ESP
+
+  Run the script "runesp". The file "LOG" will contain the transcript of
+  the test. The elapsed time of the ESP test can be determined by "LOG"
+  transcript, e,g,.,
+
+      # grep " E " LOG
+      998714059  E  ---- Start ESP ----
+      998728180  E  ---- Finish ESP ----
+
+  Given the job profile table shown in the Background, it is possible to
+  calculate an Absolute Minimum Time, (AMT), = 10773 secs, for the ESP
+  test. This represents the elapsed time for a highly-idealized case
+  with jobs non-contiguous in time, perfect packing and infinitesimal
+  launch times. The efficiency can be calculated as;
+
+      ESP Efficiency = 10773/Elapsed_Time
+
+  Note that the AMT is simply a convenient definition of a
+  lower-bound. By definition, it is difficult to attain efficiencies
+  close to unity. 
+
+
+  
+  6. REMARKS
+
+  The ESP test was designed to provide a quantitative evaluation of
+  parallel systems in those areas not normally covered by traditional
+  benchmarks but are, nonetheless, important to production usage. There
+  are myriad system features and parameters that are potentially
+  important in this regard. As an alternative to assessing and ranking
+  each feature individually, the ESP test evaluates the system via a
+  single figure of merit, the smallest elapsed time of a representative
+  workload. This metric translates into the amount of productive  usage
+  of the system over its lifespan.
+
+  The ESP test runs in the range of 4-6 hours while processing 228
+  jobs. This is a much finer job granularity than regular production
+  usage. This can be viewed as a contraction in the time line which is
+  the result of a compromise between a thorough test of the scheduler
+  and batch system and the practicalities of running the test. Thus, the
+  overhead associated with node reservation and parallel launch have a
+  large impact in this test. The system configuration should have the
+  minimal overhead possible.
+
+  The ESP test is not a scheduler benchmark per se. However, it is
+  obvious that the choice of scheduling strategy will have a significant
+  effect. At first glance, and borne out in real tests, a back-fill
+  scheduler with some form of priority preemption would be
+  optimal. Although, the difference between back-fill and, say, a FIFO
+  strategy is not large as one would initially estimate. This is
+  partially due to the composition of the workload. Observations of
+  day-to-day usage show that the union of back-filling a static queue and
+  priority-preemption is one of the keys to balancing the competing
+  requirements of high utilization and responsiveness.
+  
+  
+ 7. QUESTIONS AND EXTERNAL LINKS
+
+ More information and references : http://www.nersc.gov/projects/esp.php
+
+ To contribute bug fixes or other improvements contact kramer@nersc.gov
+
+ The development home for ESP is cvs.nersc.gov:/cvs/esp
+

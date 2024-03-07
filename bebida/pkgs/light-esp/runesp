@@ -1,0 +1,211 @@
+:
+# use perl
+eval 'exec perl -S $0 ${1+"$@"}'
+	if $running_under_some_shell;
+$running_under_some_shell = 0;
+#
+use strict;
+use warnings;
+
+our ($ESPHOME, $basedir);
+
+# find the base directory of the script
+BEGIN {
+	$basedir = $0;
+	if ($basedir =~ s{/[^/]*$}{} ) {
+		$basedir = "."	if $basedir =~ /^$/;
+	} else {
+		$basedir = ".";
+	}
+	use Env qw(ESPHOME ESPSCRATCH);
+	if ((! defined $ESPHOME) || ($ESPHOME =~ /^$/)) {
+		$ESPHOME = "$basedir";
+		print STDERR "setting ESPHOME=$ESPHOME\n";
+	}
+}
+
+$| = 1;		# flush output immediately
+#
+#    ESP master script
+#
+sub usage {
+	$0 =~ s{^.*/}{};	# strip to basename
+	print <<EOF ;
+$0 - "ESP master script - queries and submits scripts to the batch scheduler
+
+usage: $0 [-h][-v][-t][-d][-s N][-b BATCH]
+	-h		this helpful info
+	-v		verbose
+	-t		throughput run
+	-d		debug mode - do not submit jobs, but echo commands
+	-s N		set initial random seed (default = 142)
+	-I N		number to initially release (default = 50)
+	-T N		average number of seconds per submission after
+			initial release (default = 30)
+	-C N		compress time by this factor (default = 1 - none)
+	-b BATCH	batch type to use (default = TEST)
+
+EOF
+}
+
+#
+#    Fixed parameters
+#       $z1time               : first  Z job submit time (in secs)
+#       $z2time               : second Z job submit time (in secs)
+#
+my ($z1time,$z2time, $quemontime, $whendone, $randseed)
+	= ( 200, 600, 30, 30, 142);
+#
+#    Run time variables
+#
+my ($batchtype,$thruput,$debug,$delatsleep,$espdone) = ("TEST", 0, 0, 0, 0);
+
+use Getopt::Std;
+use lib "$ESPHOME/pm";
+use RandomESP;
+#
+#  Argument parsing
+#
+our ($opt_h, $opt_v, $opt_d, $opt_t, $opt_s, $opt_I, $opt_T, $opt_C, $opt_b);
+getopts("hvdts:I:T:C:b:");
+if ($opt_h) {
+	&usage();
+	exit;
+}
+$thruput = 1		if $opt_t;
+$debug = 1		if $opt_d;
+$batchtype = uc $opt_b	if $opt_b;
+$randseed = $opt_s	if $opt_s;
+$opt_T = 30		if ! defined $opt_T;
+$opt_I = 50		if ! defined $opt_I;
+$opt_C = 1		if ! defined $opt_C;
+($z1time,$z2time, $quemontime, $opt_T) = 
+	($z1time/$opt_C,$z2time/$opt_C, $quemontime/$opt_C, $opt_T/$opt_C)
+		if $opt_C != 1 && $opt_C != 0;
+
+require "$batchtype.pm";
+#
+#  Site specific parameters
+#
+#  Initialize pseudo-random number
+my ($rn, $rbt, $jobdir)
+ = (new RandomESP($randseed), new RandomESP($randseed, $opt_T*1000), "jobmix");
+
+#
+# a gaussian distribution
+#
+sub gaussian {
+	# approximate gaussian with the sum of 12 uniformly distributed
+	# pseudo-random numbers
+	# if on the interval [0,1) then the mean = 6 and stddev = 1
+	# this one is to have an mean of $opt_T and a stddev = $opt_T/6
+	my $gn = 0;
+	foreach ( 1 .. 12 ) {
+		$gn += $rbt->next();
+	}
+	$gn = int($gn / (6000));
+	$gn;
+}
+
+print <<EOF if ($debug);
+=========================================
+Running in debug mode (no job submission)
+=========================================
+EOF
+
+#
+#  Scan jobmix directory 
+#
+my ($Z1, $Z2) = <$jobdir/Z*>;
+my @scripts = <$jobdir/[A-Y]*[0-9]>;
+
+#
+#  Sort into fixed random order
+#
+my @oscripts;
+while ( scalar(@scripts) ) {
+	my $r = $rn->next() % @scripts;
+	my $s = $scripts[$r];
+	push @oscripts, $s;
+	my @t2 = splice @scripts, $r;
+	push @scripts, splice @t2, 1;
+}
+
+printf(" Total Regular scripts = %d\n", scalar(@oscripts) );
+
+my $q = new $batchtype;
+#
+#  Submit jobs
+#
+print "Start job submissions @ ", time(), "\n";
+my $jobtot=0;
+my $T0=time();
+open(LOG, ">> LOG")	|| die "Can not open LOG for appending";
+select LOG;
+$| = 1;		# flush LOG output
+select STDOUT;
+
+printf LOG "%d  %s  RandomSeed:%d\n", time(), "Y", $randseed; 
+printf LOG "%d  %s  Thruput:%d\n", time(), "Y", $thruput; 
+printf LOG "%d  %s  ---- Start ESP ----\n", $T0, "R"; 
+
+if (1) {
+
+foreach my $j (@oscripts) {
+	++$jobtot;
+	my @jobpath = split "/", $j;
+	my $jobname = $jobpath[$#jobpath];
+	printf LOG "%d  %s  %s   Seq_%d\n", time(), "Q", $jobname, $jobtot;
+	printf     "%d  %s  %s   Seq_%d\n", time(), "Q", $jobname, $jobtot
+		if ($debug);
+	$ENV{'SEQNUM'} = $jobtot;
+#	my $doit = ($debug) ? ($jobtot < 4) : 1;
+	my $doit = ! $debug;
+	# pause after the initial submission block
+	sleep(&gaussian() - 1)	if $jobtot > $opt_I;
+	$q->submit( $j, $doit );
+	$q->monitor_queues( 1 );
+}
+} else { $T0 = 9999; }
+
+#
+#  Submit first Z job
+#
+if ($thruput == 0) {
+	while ((time()-$T0)< $z1time ) {
+		$q->monitor_queues($quemontime);
+	}
+	++$jobtot;
+	my $Z1n = (split "/", $Z1)[1];
+	printf LOG "%d  %s  %s   Seq_%d\n", time(), "Q", $Z1n, $jobtot;
+	printf     "%d  %s  %s   Seq_%d\n", time(), "Q", $Z1n, $jobtot
+		if ($debug);
+	$q->submit( $Z1, !$debug );
+}
+#
+#  Submit second Z job
+#
+if ($thruput == 0) {
+	while ((time()-$T0)< $z2time ) {
+		$q->monitor_queues($quemontime);
+	}
+	++$jobtot;
+	my $Z2n = (split "/", $Z2)[1];
+	printf LOG "%d  %s  %s   Seq_%d\n", time(), "Q", $Z2n, $jobtot;
+	printf     "%d  %s  %s   Seq_%d\n", time(), "Q", $Z2n, $jobtot
+		if ($debug);
+	$q->submit( $Z2, !$debug);
+}
+#
+#  Wait for jobs to finish
+#  
+my $countdone = 0;
+while (!$espdone && $countdone < $whendone) {
+	$q->monitor_queues($quemontime);
+	# $espdone is updated within monitor_queues
+	$countdone++	if $espdone;
+}
+printf LOG "%d  %s  ---- Finish ESP ----\n", time(), "E"; 
+close(LOG);
+
+exit;

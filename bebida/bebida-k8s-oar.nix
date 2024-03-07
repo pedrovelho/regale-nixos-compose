@@ -18,7 +18,7 @@
       };
 
       server = { ... }: {
-        imports = [ commonConfig oarConfig demoConfig ./ryax.nix ];
+        imports = [ commonConfig oarConfig demoConfig ]; # ./ryax.nix ];
         # Make this machine an NFS server for users homes
         nxc.sharedDirs."/users".export = true;
 
@@ -36,7 +36,7 @@
           echo 'node-external-ip: "'$SERVER'"' >> /etc/k3s.yaml
         '';
 
-        services.ryax-install.enable = true;
+        # services.ryax-install.enable = true;
 
         services.k3s = {
           inherit tokenFile;

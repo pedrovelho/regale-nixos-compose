@@ -1,0 +1,3 @@
+pchksum-genrand.o: genrand.c genrand.h
+
+genrand.h:
