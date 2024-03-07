@@ -89,7 +89,7 @@ require "$batchtype.pm";
 #
 #  Initialize pseudo-random number
 my ($rn, $rbt, $jobdir)
- = (new RandomESP($randseed), new RandomESP($randseed, $opt_T*1000), $ENV{ESPSCRATCH});
+ = (new RandomESP($randseed), new RandomESP($randseed, $opt_T*1000), "$ENV{ESPSCRATCH}/jobmix");
 
 print "JOB DIR: $jobdir\n";
 

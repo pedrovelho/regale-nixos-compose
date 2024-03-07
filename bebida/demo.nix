@@ -15,4 +15,8 @@
           - "100"
     '';
   };
+  environment.etc."demo/run-hpc-workload.sh" = {
+    source = ./run-hpc-workload.sh;
+  };
+
 }

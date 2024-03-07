@@ -74,17 +74,17 @@ sub create_jobs {
     foreach my $j (keys %{$self->jobdesc}) {
         my @jj = @{$self->jobdesc->{$j}};
         my $taskcount = $self->taskcount($jj[0]);
-        my $cline = $self->command("\$ESP/","$jj[2]");
+        my $cline = $self->command("$ENV{ESPHOME}/","$jj[2]");
         my $wlimit = int($jj[2]*1.50);
         my $min = int($wlimit/60);
         my $sec = int($wlimit%60);
         my $walltime = "00:$min:$sec";
         for (my $i=0; $i < $jj[1]; $i++) {
             my $needed = $taskcount/$packed;
-            my $nodes = "/core=$taskcount,walltime=$walltime";
+            my $nodes = "/resource_id=$taskcount,walltime=$walltime";
             my $np=$taskcount;
-            if ($taskcount == 2){ $np = 3}
-            if ($taskcount == 16){ $np = 17}
+            # if ($taskcount == 2){ $np = 3}
+            # if ($taskcount == 16){ $np = 17}
             my $joblabel = $self->joblabel($j,$taskcount,$i);
             print STDERR "creating $joblabel\n" if $self->verbose;
             open(NQS, "> $joblabel");
@@ -93,15 +93,21 @@ sub create_jobs {
 #  adapt to site batch queue system
 #
 print NQS <<"EOF";
-#\!/usr/bin/env sh
+#\!/usr/bin/env bash
 #OAR -n $joblabel
 #OAR -l $nodes
 #OAR --stdout $ENV{ESPSCRATCH}/logs/$joblabel.out
+#OAR --stderr $ENV{ESPSCRATCH}/logs/$joblabel.out
 
+PATH=\$PATH:$ENV{ESPHOME}/bin
 
-echo `\$ESPHOME/bin/epoch` " START  $joblabel   Seq_\${SEQNUM}" >> \$ESPSCRATCH/LOG
+echo `epoch` " START  $joblabel   Seq_\${SEQNUM}" >> $ENV{ESPSCRATCH}/LOG
+echo =====
+echo OAR_NODEFILE:
+cat \$OAR_NODEFILE
+echo =====
 $timer mpirun -np $np --hostfile \$OAR_NODEFILE --mca plm_rsh_agent "oarsh" $cline
-echo `\$ESPHOME/bin/epoch` " FINISH $joblabel   Seq_\${SEQNUM}" >> \$ESPSCRATCH/LOG
+echo `epoch` " FINISH $joblabel   Seq_\${SEQNUM}" >> $ENV{ESPSCRATCH}/LOG
 
 exit
 EOF
