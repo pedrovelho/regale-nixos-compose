@@ -27,8 +27,12 @@
 
         services.bebida-shaker.enable = true;
 
-        # K3s utils
-        environment.systemPackages = with pkgs; [ gzip jq kubectl ];
+        # utils
+        environment.systemPackages = with pkgs; [
+          gzip jq kubectl
+          # HPC Workload generator
+          (callPackage ./pkgs/light-ESP.nix {})
+        ];
 
         system.activationScripts.k3s-config = ''
           SERVER=$( grep server /etc/nxc/deployment-hosts | ${pkgs.gawk}/bin/awk '{ print $1 }')

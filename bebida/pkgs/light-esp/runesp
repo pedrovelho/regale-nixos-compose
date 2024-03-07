@@ -89,7 +89,9 @@ require "$batchtype.pm";
 #
 #  Initialize pseudo-random number
 my ($rn, $rbt, $jobdir)
- = (new RandomESP($randseed), new RandomESP($randseed, $opt_T*1000), "jobmix");
+ = (new RandomESP($randseed), new RandomESP($randseed, $opt_T*1000), $ENV{ESPSCRATCH});
+
+print "JOB DIR: $jobdir\n";
 
 #
 # a gaussian distribution

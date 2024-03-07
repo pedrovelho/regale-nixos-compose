@@ -4,7 +4,7 @@ stdenv.mkDerivation {
   name = "Light-ESP";
   version = "2.2.1";
 
-  src =  ./light-esp;
+  src = ./light-esp;
 
   preConfigure = ''
     export ESPHOME=$out
@@ -15,6 +15,11 @@ stdenv.mkDerivation {
     cp ./runesp $out/bin
     cp ./jobmix/mkjobmix $out/bin
     mkdir $out/pm
-    cp ./pm/OAR-bebida.pm $out/pm
+    cp -r ./pm/* $out/pm
   '';
+
+    meta = {
+    description = "Run a fixed number of parallel jobs through a batch scheduler in the minimum elapsed time.";
+    longDescription = "Usage: TODO";
+  };
 }
