@@ -18,7 +18,7 @@ stdenv.mkDerivation {
     cp -r ./pm/* $out/pm
   '';
 
-    meta = {
+  meta = {
     description = "Run a fixed number of parallel jobs through a batch scheduler in the minimum elapsed time.";
     longDescription = "Usage: TODO";
   };

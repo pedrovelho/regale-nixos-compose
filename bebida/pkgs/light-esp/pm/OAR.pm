@@ -106,7 +106,7 @@ echo =====
 echo OAR_NODEFILE:
 cat \$OAR_NODEFILE
 echo =====
-$timer mpirun -np $np --hostfile \$OAR_NODEFILE --mca plm_rsh_agent "oarsh" $cline
+$timer mpirun -np $np --hostfile \$OAR_NODEFILE --mca plm_rsh_agent "oarsh" --mca btl ^openib $cline
 echo `epoch` " FINISH $joblabel   Seq_\${SEQNUM}" >> $ENV{ESPSCRATCH}/LOG
 
 exit

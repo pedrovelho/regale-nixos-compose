@@ -116,7 +116,7 @@ Running in debug mode (no job submission)
 EOF
 
 #
-#  Scan jobmix directory 
+#  Scan jobmix directory
 #
 my ($Z1, $Z2) = <$jobdir/Z*>;
 my @scripts = <$jobdir/[A-Y]*[0-9]>;

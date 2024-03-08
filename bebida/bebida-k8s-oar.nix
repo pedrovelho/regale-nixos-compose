@@ -29,9 +29,11 @@
 
         # utils
         environment.systemPackages = with pkgs; [
-          gzip jq kubectl
+          gzip
+          jq
+          kubectl
           # HPC Workload generator
-          (callPackage ./pkgs/light-ESP.nix {})
+          (callPackage ./pkgs/light-ESP.nix { })
         ];
 
         system.activationScripts.k3s-config = ''

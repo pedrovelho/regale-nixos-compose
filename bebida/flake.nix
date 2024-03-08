@@ -33,6 +33,6 @@
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
       devShell.${system} = nxc.devShells.${system}.nxcShellFull;
       # For testing packaging
-      lightESP = nixpkgs.legacyPackages.x86_64-linux.callPackage ./pkgs/light-ESP.nix {};
+      lightESP = nixpkgs.legacyPackages.x86_64-linux.callPackage ./pkgs/light-ESP.nix { };
     };
 }
