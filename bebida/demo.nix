@@ -16,7 +16,9 @@
     '';
   };
   environment.etc."demo/run-hpc-workload.sh" = {
-    source = ./run-hpc-workload.sh;
+    source = ./scipts/run-hpc-workload.sh;
   };
-
+  environment.etc."demo/spark-setup.yaml" = {
+    source = ./scipts/spark-sa.yaml;
+  };
 }
