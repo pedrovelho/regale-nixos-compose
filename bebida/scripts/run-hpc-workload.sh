@@ -6,12 +6,11 @@ set -u
 
 SIZE=$1
 RESULTS_DIR=$2
-SPARK_EVENT_LOG_DIR=
 
 export ESPHOME=$(dirname $(dirname $(realpath $(which mkjobmix))))
 
-EXPE_ID=$(expe-$(date --iso-8601=hours))
-export ESPSCRATCH=$HOME/$EXPE_ID
+EXPE_DIR=expe-$(date --iso-8601=hours)
+export ESPSCRATCH=$HOME/$EXPE_DIR
 mkdir -p $ESPSCRATCH/logs
 mkdir -p $ESPSCRATCH/jobmix
 cd $ESPSCRATCH/jobmix

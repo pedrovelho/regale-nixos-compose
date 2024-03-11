@@ -83,8 +83,6 @@ sub create_jobs {
             my $needed = $taskcount/$packed;
             my $nodes = "/resource_id=$taskcount,walltime=$walltime";
             my $np=$taskcount;
-            # if ($taskcount == 2){ $np = 3}
-            # if ($taskcount == 16){ $np = 17}
             my $joblabel = $self->joblabel($j,$taskcount,$i);
             print STDERR "creating $joblabel\n" if $self->verbose;
             open(NQS, "> $joblabel");
@@ -106,7 +104,9 @@ echo =====
 echo OAR_NODEFILE:
 cat \$OAR_NODEFILE
 echo =====
-$timer mpirun -np $np --hostfile \$OAR_NODEFILE --mca plm_rsh_agent "oarsh" --mca btl ^openib $cline
+# WARNING use sleep instead of this because is seems to be broken on recent MPI
+# $timer mpirun -np $np --hostfile \$OAR_NODEFILE --mca plm_rsh_agent "oarsh" --mca btl ^openib $cline
+sleep infinity
 echo `epoch` " FINISH $joblabel   Seq_\${SEQNUM}" >> $ENV{ESPSCRATCH}/LOG
 
 exit
