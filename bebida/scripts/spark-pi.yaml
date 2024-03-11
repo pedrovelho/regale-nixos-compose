@@ -25,6 +25,8 @@ spec:
     - spark.kubernetes.executor.request.cores=1
     # Kube specific conf
     - --conf
+    - spark.kubernetes.executor.node.selector.bebida=node
+    - --conf
     - spark.kubernetes.executor.podTemplateFile=/etc/config/executor.yaml
       # REPLACED by Pod template
       #- --conf
@@ -39,10 +41,6 @@ spec:
     - spark.eventLog.enabled=true
     - --conf
     - spark.eventLog.dir=/data
-    - --conf
-    - spark.kubernetes.driver.volumes.nfs.images.options.server=server
-    - --conf
-    - spark.kubernetes.driver.volumes.nfs.images.options.path=/data
     - local:///usr/local/spark/examples/jars/spark-examples_2.11-2.4.5.jar
     - "50000"
     image: ryaxtech/spark-on-k8s:v0.1.0

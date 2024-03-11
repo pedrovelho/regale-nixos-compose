@@ -74,7 +74,7 @@
           #   - key: "bebida"
           #     operator: "Exists"
           #     effect: "NoSchedule"
-          extraFlags = "--node-taint=bebida=hpc:NoSchedule";
+          extraFlags = "--node-taint=bebida=hpc:NoSchedule --node-label=bebida=node";
         };
       };
     };
