@@ -1,3 +1,4 @@
+#!/bin/bash
 export OAR_JOB_ID=$1
 export PATH=$PATH:/run/current-system/sw/bin:/run/wrappers/bin
 (
