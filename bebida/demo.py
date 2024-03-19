@@ -1,6 +1,7 @@
 import os
 
-start_all()
+# For debug
+# log.info("Environment vars are: " + os.environ)
 
 server.wait_for_unit('oar-server.service')
 # Submit job with script under user1
@@ -23,23 +24,5 @@ server.wait_until_succeeds('k3s kubectl get nodes | grep Ready', timeout=10)
 # This can take some time depending on your network connection
 server.wait_until_succeeds('k3s kubectl get pods -A | grep Running', timeout=90)
 
-#pod_def = """
-#apiVersion: v1
-#kind: Pod
-#metadata:
-#  name: busybox-1
-#spec:
-#  containers:
-#  - name: busybox
-#    image: busybox:1.28
-#    args:
-#    - sleep
-#    - "100"
-#"""
-#with open("/tmp/demo-pod.yml", "w") as pod_def_file:
-#    pod_def_file.write(pod_def)
-#
-log.info("Environment vars are: " + os.environ)
-# server.copy_from_host('/tmp/demo-pod.yml', '/tmp/pod.yml')
 server.succeed('k3s kubectl apply -f /etc/demo/pod-sleep-100.yml')
 server.wait_until_succeeds('k3s kubectl get pods | grep Running', timeout=60)

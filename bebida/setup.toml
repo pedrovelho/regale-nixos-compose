@@ -1,4 +1,5 @@
 [project]
+selected = "local"
 [options]
 kernel-params = "systemd.unified_cgroup_hierarchy=0"
 
@@ -9,5 +10,5 @@ kernel-params = "systemd.unified_cgroup_hierarchy=0"
 src = "/home/mmercier/Projects/oar3"
 
 [local.options]
-nix-flags = "--impure --verbose"
+nix-flags = "--impure --verbose --override-input nxc path:/home/mmercier/Projects/nixos-compose --override-input bebidaOptimizer path:/home/mmercier/Projects/bebida-optimization-service"
 

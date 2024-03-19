@@ -4,13 +4,11 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/23.05";
     nxc.url = "git+https://gitlab.inria.fr/nixos-compose/nixos-compose.git"; #?ref=nixpkgs-2305";
-    # nxc.url = "/home/mmercier/Projects/nixos-compose";
     nxc.inputs.nixpkgs.follows = "nixpkgs";
     NUR.url = "github:nix-community/NUR";
     kapack.url = "github:oar-team/nur-kapack?ref=regale";
     kapack.inputs.nixpkgs.follows = "nixpkgs";
     bebidaOptimizer.url = "github:RyaxTech/bebida-optimization-service";
-    # bebidaOptimizer.url = "/home/mmercier/Projects/bebida-optimization-service";
   };
 
   outputs = { self, nixpkgs, nxc, NUR, kapack, bebidaOptimizer }:

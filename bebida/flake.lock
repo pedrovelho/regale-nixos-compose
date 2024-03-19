@@ -21,11 +21,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1709574535,
-        "narHash": "sha256-fsBphIKWiaMLbzrJfyE1AoQUdFs0JdzW+hRBSTSH+5Q=",
+        "lastModified": 1710168055,
+        "narHash": "sha256-Br9HVM0ff6kLR3EsPt2SaBF+Qzst3rz2pmzO055Gvbc=",
         "owner": "RyaxTech",
         "repo": "bebida-optimization-service",
-        "rev": "4414d86de0f730bc726b7d6e23415c0475819a46",
+        "rev": "21c2d3bf4dd585b33945d25bbef1823cdb157841",
         "type": "github"
       },
       "original": {
@@ -219,11 +219,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1707928615,
-        "narHash": "sha256-dEVBAVVIpmlNCxBgJSA0upfujrrTidXjG6uTpv3DsoQ=",
+        "lastModified": 1710171741,
+        "narHash": "sha256-r1GM7EjntmcOHj9SrMppet0YshLB049Y1NTazWvvyV0=",
         "ref": "refs/heads/master",
-        "rev": "56396a6dc6510fdbcb4041924d3d8708eddebf5a",
-        "revCount": 588,
+        "rev": "c1445485285566bd5b3236c350199cfde15a2489",
+        "revCount": 598,
         "type": "git",
         "url": "https://gitlab.inria.fr/nixos-compose/nixos-compose.git"
       },
