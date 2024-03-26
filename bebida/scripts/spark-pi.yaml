@@ -29,8 +29,8 @@ spec:
       #- --conf
       #- spark.kubernetes.executor.podTemplateFile=/etc/config/executor.yaml
       # REPLACED by Pod template
-      #- --conf
-      #- spark.kubernetes.container.image=ryaxtech/spark-on-k8s:v0.1.0
+    - --conf
+    - spark.kubernetes.container.image=ryaxtech/spark-on-k8s:v0.1.0
     - --conf
     - spark.driver.host=spark-app-pi
     - --conf
