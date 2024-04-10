@@ -49,6 +49,8 @@ in
             K3S_KUBECONFIG_MODE=666
           '';
         };
+
+        services.ryax-install.enable = true;
       };
 
       node = { ... }: {
