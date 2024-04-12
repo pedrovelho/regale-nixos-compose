@@ -42,7 +42,7 @@ in
     tifffile==2022.5.4
     pyarrow==10.0.0
     EOF
-    pip -m venv .venv
+    python -m venv .venv
     source .venv/bin/activate
     pip install -r requirements.txt
   '';
