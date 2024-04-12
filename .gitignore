@@ -8,3 +8,15 @@
 bebida/result
 bebida/OAR.*.stderr
 bebida/OAR.*.stdout
+/.idea/.gitignore
+/scio-facet/nxc/build/composition::docker
+/scio-facet/nxc/deploy/composition::docker.json
+/scio-facet/nxc/build/composition::vm
+/scio-facet/nxc/deploy/composition::vm.json
+/scio-facet/nxc/artifact/composition/docker/docker-compose.json
+/.idea/misc.xml
+/.idea/modules.xml
+/scio-facet/nxc.json
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/regale-nixos-compose.iml
+/.idea/vcs.xml
