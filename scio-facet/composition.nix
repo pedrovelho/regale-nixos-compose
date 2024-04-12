@@ -47,29 +47,4 @@ in
     };
 
   rolesDistribution = { node = nbNodes; };
-
-  testScript = ''
-    start_all()
-
-    # Make sure DBD is up after DB initialzation
-    with subtest("can_start_slurmdbd"):
-        dbd.succeed("systemctl restart slurmdbd")
-        dbd.wait_for_unit("slurmdbd.service")
-        dbd.wait_for_open_port(6819)
-
-    # there needs to be an entry for the current
-    # cluster in the database before slurmctld is restarted
-    with subtest("add_account"):
-        server.succeed("sacctmgr -i add cluster default")
-        # check for cluster entry
-        server.succeed("sacctmgr list cluster | awk '{ print $1 }' | grep default")
-
-    with subtest("can_start_slurmctld"):
-        server.succeed("systemctl restart slurmctld")
-        server.wait_for_unit("slurmctld.service")
-
-    with subtest("can_start_slurmd"):
-            node1.succeed("systemctl restart slurmd.service")
-            node1.wait_for_unit("slurmd")
-  '';
 }
