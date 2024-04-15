@@ -2,7 +2,7 @@
   description = "Slurm and facet aware cluster";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/23.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/e0da498ad77ac8909a980f07eff060862417ccf7";
     nxc.url = "git+https://gitlab.inria.fr/nixos-compose/nixos-compose.git";
     nxc.inputs.nixpkgs.follows = "nixpkgs";
     NUR.url = "github:nix-community/NUR";
